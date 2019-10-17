@@ -13,6 +13,7 @@ class MovieListViewController: UITableViewController {
     var tableData : [[String:Any]]?
     
     let apiUrl = "https://api.themoviedb.org/3/movie/now_playing?api_key=a07e22bc18f5cb106bfe4cc1f83ad8ed"
+    let baseImageUrl = "https://image.tmdb.org/t/p/w500"
     
     override func viewDidLoad() {
         
@@ -23,15 +24,16 @@ class MovieListViewController: UITableViewController {
         tableView.tableFooterView = UIView(frame: .zero)
         tableView.rowHeight = 120
         
+        downloadData()
+    }
+    
+    func downloadData() {
         guard let url = URL(string: apiUrl) else { return }
-        
+                
         URLSession.shared.dataTask(with: url) { (data, response, error) in
             if error != nil {
                 print("Error")
             } else if let data = data {
-            
-//            let str = String(decoding: data!, as: UTF8.self)
-            
                 let dataDictionary = try! JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
                 
                 self.tableData = dataDictionary["results"] as? [[String: Any]]
@@ -40,7 +42,6 @@ class MovieListViewController: UITableViewController {
                 }
             }
         }.resume()
-        
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -55,7 +56,7 @@ class MovieListViewController: UITableViewController {
         }
         
         if let imgURl = tableData?[indexPath.row]["poster_path"] {
-            cell.posterImage.loadImage(url: "https://image.tmdb.org/t/p/w500"+(imgURl as! String))
+            cell.posterImage.loadImage(url: baseImageUrl + (imgURl as! String))
         }
         
         return cell
@@ -68,22 +69,12 @@ class MovieListViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         return 120
     }
-    
-    let posterImage : PosterImageView = {
-        let image = PosterImageView()
-        image.translatesAutoresizingMaskIntoConstraints = false
-        image.contentMode = .scaleAspectFit
-        image.clipsToBounds = true
-        return image
-    }()
 }
 
 class MovieCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
-//        posterImage.image = UIImage(named: "joker.jpg")
         setupUI()
     }
     
@@ -118,15 +109,11 @@ class MovieCell: UITableViewCell {
         contentView.addSubview(posterImage)
         contentView.addSubview(title)
         contentView.addSubview(desc)
-        
-//        contentView.heightAnchor.constraint(equalToConstant: 120).isActive = true
-        
+                
         posterImage.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 20).isActive = true
         posterImage.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10).isActive = true
         posterImage.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10).isActive = true
         posterImage.widthAnchor.constraint(equalTo: posterImage.heightAnchor, multiplier: 500/750).isActive = true
-//        posterImage.widthAnchor.constraint(equalTo: posterImage.heightAnchor, multiplier: 500/750).priority = .defaultLow
-//        posterImage.heightAnchor.constraint(equalToConstant: 120).isActive = true
         
         title.leftAnchor.constraint(equalTo: posterImage.rightAnchor, constant: 20).isActive = true
         title.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10).isActive = true
