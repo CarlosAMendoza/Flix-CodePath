@@ -13,7 +13,7 @@ class PosterImageView: UIImageView {
     var imageUrl:String = ""
     
     func loadImage(url: String) {
-        backgroundColor = .blue
+        imageUrl = url
         
         image = nil
         
