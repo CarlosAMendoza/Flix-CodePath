@@ -14,6 +14,7 @@ class MovieListViewController: UITableViewController {
     
     let apiUrl = "https://api.themoviedb.org/3/movie/now_playing?api_key=a07e22bc18f5cb106bfe4cc1f83ad8ed"
     let baseImageUrl = "https://image.tmdb.org/t/p/w500"
+    let baseBackdropUrl = "https://image.tmdb.org/t/p/original"
     
     override func viewDidLoad() {
         
@@ -65,6 +66,33 @@ class MovieListViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return tableData?.count ?? 0
     }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let detail = DetailViewController()
+        
+        if let movieTitle = tableData?[indexPath.row]["title"] {
+            detail.movieTitle.text = movieTitle as? String
+        }
+        
+        if let releaseDate = tableData?[indexPath.row]["release_date"] {
+            detail.releaseDate.text = releaseDate as? String
+        }
+        
+        if let desc = tableData?[indexPath.row]["overview"] {
+            detail.desc.text = desc as? String
+        }
+        
+        if let backdropUrl = tableData?[indexPath.row]["backdrop_path"] {
+            detail.backdropView.loadImage(url: baseBackdropUrl + (backdropUrl as! String))
+        }
+        
+        if let posterURl = tableData?[indexPath.row]["poster_path"] {
+            detail.posterView.loadImage(url: baseImageUrl + (posterURl as! String))
+        }
+        
+        self.navigationController?.pushViewController(detail, animated: true)
+    }
+    
 }
 
 class MovieCell: UITableViewCell {
