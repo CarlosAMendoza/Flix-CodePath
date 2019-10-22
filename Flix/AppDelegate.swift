@@ -19,10 +19,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.makeKeyAndVisible()
         
-        let controller = MovieListViewController()
-        let navigationController = UINavigationController(rootViewController: controller)
+        let movieListController = MovieListViewController()
+        let movieListNavigationController = UINavigationController(rootViewController: movieListController)
+        movieListNavigationController.tabBarItem = UITabBarItem(title: "Now Playing", image: #imageLiteral(resourceName: "now_playing_tabbar_item"), tag: 0)
         
-        window?.rootViewController = navigationController
+        let superHeroController = SuperHeroCollectionViewController(collectionViewLayout: UICollectionViewFlowLayout())
+        let superHeroNavigationController = UINavigationController(rootViewController: superHeroController)
+        superHeroNavigationController.tabBarItem = UITabBarItem(title: "Superhero", image: #imageLiteral(resourceName: "superhero_tabbar_item"), tag: 1)
+        
+        let tabBarController = UITabBarController()
+        
+        tabBarController.viewControllers = [movieListNavigationController,superHeroNavigationController]
+        
+        window?.rootViewController = tabBarController
         
         
         return true
