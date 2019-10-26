@@ -37,6 +37,8 @@ class SuperHeroCollectionViewController: UICollectionViewController{
         layout.minimumLineSpacing = 2
         layout.minimumInteritemSpacing = 1
         
+        collectionView.contentInsetAdjustmentBehavior = .always
+        
         downloadData()
         
 
